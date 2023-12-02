@@ -1,0 +1,134 @@
+{{ 'product-ingredient.css' | asset_url | stylesheet_tag }}
+
+
+<div class="page-width">
+  <h1 class="ingredient-section-title">{{ section.settings.section_title }}</h1>
+  <div class="metaobject-panel">
+    {%- for block in section.blocks -%}
+      <div class="ingredient-item">
+        <div class="ingredient-image">
+          <img src="{{ block.settings.image | image_url }}" />
+        </div>
+        <h2 class="ingredient-name">{{ block.settings.name }}</h2>
+        <p class="brief_description">{{ block.settings.brief_description }}</p>
+        <a href="javascript:;" class="learn-more" id="modal-detail-{{ forloop.index }}">LEARN MORE</a>
+      </div>
+
+      <div id="ingredientModal-{{ forloop.index }}" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+          </div>
+          <div class="modal-body">
+            <div class="modal-image-text">
+              <div class="modal-image"><img src="{{ block.settings.image | image_url }}" /></div>
+              <div class="modal-name-info">
+                <h2 class="modal-name">{{ block.settings.name }}</h2>
+                <p class="modal-other-info">{{ block.settings.other_info }}</p>
+              </div>
+            </div>
+            <p class="modal-main-description">{{ block.settings.main_description }}</p>
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  {%- for block in section.blocks -%}
+    document.querySelector('#modal-detail-{{ forloop.index }}').addEventListener('click', function() {
+      document.getElementById("ingredientModal-{{ forloop.index }}").style.display = "block";
+    });
+    document.getElementsByClassName("close")[{{ forloop.index0 }}].onclick = function() {
+      document.getElementById("ingredientModal-{{ forloop.index }}").style.display = "none";
+    };
+    window.onclick = function(event) {
+      if (event.target.getAttribute("class") == "modal") {  
+        event.target.style.display = "none";
+      }
+    };
+  {%- endfor -%}
+</script>
+
+{% schema %}
+{
+  "name": "MetaObject",
+  "tag": "section",
+  "class": "section product_metaobject",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },        
+        {
+          "type": "text",
+          "id": "display_name",
+          "label": "Display Name"
+        },
+        {
+          "type": "radio",
+          "id": "enable",
+          "label": "Enable",
+          "options": [
+            {
+              "value": "true",
+              "label": "True"
+            },
+            {
+              "value": "false",
+              "label": "False"
+            }
+          ],
+          "default": "false"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "richtext",
+          "id": "brief_description",
+          "label": "Brief Description"
+        },
+        {
+          "type": "richtext",
+          "id": "main_description",
+          "label": "Main Description"
+        },
+        {
+          "type": "richtext",
+          "id": "other_info",
+          "label": "Other Info"
+        }          
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MetaObject"
+    }
+  ]
+}
+{% endschema %}

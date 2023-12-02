@@ -1,0 +1,69 @@
+{{ 'collection-tabs.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width"> 
+  <div class="collection-tabs">  
+    {%- for block in section.blocks -%}
+      <a class="collection-tab__item" href="javascript:;" data-collection-url="{{ block.settings.collection.url }}">{{ block.settings.collection.title }}</a>
+    {%- endfor -%}
+  </div>
+  <select class="collection-options">
+    {%- for block in section.blocks -%}
+      <option value="{{ block.settings.collection.url }}">{{ block.settings.collection.title }}</option>
+    {%- endfor -%}
+  </select>
+</div>
+
+<script>
+  document.querySelectorAll('.collection-tab__item').forEach(function(elem) {
+    elem.addEventListener('click', function() {
+      var param = elem.getAttribute('data-collection-url');
+      UpdateProductGrid(param);
+    })
+  })
+
+
+  document.querySelector(".collection-options").addEventListener('change', function() {
+    var param = this.value;
+    UpdateProductGrid(param);
+  })
+
+  function UpdateProductGrid(param) {
+    const url = location.origin + param
+    history.pushState({}, "", url);
+    fetch(url)
+      .then(res => res.text())
+      .then(html => {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        document.querySelector("#product-grid").innerHTML = doc.querySelector('#product-grid').innerHTML;
+      })
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection Tabs",
+  "tag": "section",
+  "max_blocks": 15,
+  "settings": [
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Tabs"
+    }
+  ]
+}
+{% endschema %}

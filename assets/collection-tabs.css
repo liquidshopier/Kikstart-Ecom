@@ -1,0 +1,33 @@
+.collection-tabs {
+    margin-top: 20px;
+}
+
+.collection-tabs a {
+    color: #000;
+    text-decoration: none;
+    padding: 5px 20px;
+    text-transform: uppercase;
+}
+
+.collection-hero__title {
+    display: none;
+}
+
+.collection-options {
+    display: none;
+    font-size: 14px;
+    margin-top: 20px;
+    padding: 10px;
+    text-transform: uppercase;
+    outline: unset;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .collection-options {
+        display: block;
+    }
+    .collection-tabs {
+        display: none;
+    }
+}
